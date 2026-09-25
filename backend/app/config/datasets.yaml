@@ -1,0 +1,60 @@
+datasets:
+  gdp_state_real_supply:
+    title: Annual Real GDP by State and Economic Sector
+    url: https://storage.dosm.gov.my/gdp/gdp_state_real_supply.parquet
+    frequency: annual
+    note: Constant 2015 prices, RM million. Putrajaya coverage depends on source vintage; unavailable observations are not split or imputed.
+  hies_state:
+    title: Household Income and Expenditure by State
+    url: https://storage.dosm.gov.my/hies/hies_state.parquet
+    frequency: survey
+    note: Nominal monthly household income and expenditure. Poverty methodology may change across surveys.
+  hh_income_state:
+    title: Historical Household Income by State
+    url: https://storage.dosm.gov.my/hies/hh_income_state.parquet
+    frequency: survey
+    note: The 2020 income estimates are excluded from survey trends; actual survey observations only.
+  hh_inequality_state:
+    title: Historical Income Inequality by State
+    url: https://storage.dosm.gov.my/hies/hh_inequality_state.parquet
+    frequency: survey
+  lfs_qtr_state:
+    title: Quarterly Principal Labour Force Statistics by State
+    url: https://storage.dosm.gov.my/labour/lfs_qtr_state.parquet
+    frequency: quarterly
+    note: Published quarterly unemployment rate. Quarters are not annual estimates. Changes are percentage points from the previous observed quarter.
+  lfs_state_sex:
+    title: Annual Principal Labour Force Statistics by State and Sex
+    url: https://storage.dosm.gov.my/labour/lfs_state_sex.parquet
+    frequency: annual
+    note: Both sexes only for indicators. Employment is published in thousands. Quarterly observations are not substituted for annual observations.
+  population_state:
+    title: Population Table by State
+    url: https://storage.dosm.gov.my/population/population_state.parquet
+    frequency: annual
+    note: Both sexes, all ages and ethnicities. Population is in thousands.
+  dosm_publication_19977:
+    title: Tables of Malaysia and State GDP — Table A23, GDP per capita
+    url: https://www.dosm.gov.my/portal-main/release-document-log?release_document_id=19977
+    source_url: https://www.dosm.gov.my/portal-main/release-content/gross-domestic-product-gdp-by-state-2025
+    frequency: annual
+    format: xlsx
+    adapter: gdp_capita
+    note: Local registry key identifies DOSM document 19977, not an OpenDOSM dataset ID. Table A23, current prices (nominal RM per person). Workbook estimates and provisional flags preserved in raw rows.
+  dosm_publication_18690:
+    title: Labour Productivity by State — Table 1
+    url: https://www.dosm.gov.my/portal-main/release-document-log?release_document_id=18690
+    source_url: https://www.dosm.gov.my/portal-main/release-content/labour-productivity-by-state-2024
+    frequency: annual
+    format: xlsx
+    adapter: productivity
+    note: Local registry key identifies DOSM document 18690, not an OpenDOSM dataset ID. Published value added per employment; Kuala Lumpur includes Putrajaya. Not GDP divided by the household labour survey employment count.
+discovery:
+  land_area:
+    status: publication_identified_phase_2
+    source_url: https://www.dosm.gov.my/uploads/release-content/file_20241122110202.pdf
+    note: Official Table 1.1, Size of land area by state, Malaysia, 2021–2023, page 55. Covers all states and Federal Territories. PDF extraction and reconciliation of area revisions are reserved for Phase 2.
+  population_density:
+    status: publication_identified_phase_2
+    source_url: https://www.dosm.gov.my/portal-main/release-document-log?release_document_id=15649
+    note: Current Population Estimates 2025, Table 2, Sex ratio and population density by state, 2024 and 2025, page 8. Covers all states and Federal Territories. PDF extraction is reserved for Phase 2; no invented catalogue ID.
