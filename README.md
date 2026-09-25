@@ -11,7 +11,9 @@ npm install
 npm run dev
 ```
 
-In another terminal:
+The dashboard is static by default. It reads the committed snapshot in `public/static-api`; no Python server is required to browse it.
+
+To refresh the snapshot from the cached source data, activate the Python environment and run:
 
 ```sh
 cd backend
@@ -19,16 +21,17 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 python -m app.data.refresh
-uvicorn app.main:app --reload --port 8000
+cd ..
+npm run data:export
 ```
 
-Open the Vite URL (normally http://localhost:5173). The initial overview is **Same Year → 2024**, comparing the 13 states. The navigation shows the result of `/api/health`. Vite proxies `/api` to FastAPI. The first analytical request also downloads missing sources; the explicit refresh command is recommended so progress is visible.
+Open the Vite URL (normally http://localhost:5173). The initial overview is **Same Year → 2024**, comparing the 13 states. Set `VITE_API_URL` only when intentionally using a live FastAPI deployment instead of the static snapshot.
 
 Environment variables are read from the process environment. Vite automatically reads a root `.env.local`; the Python process does not automatically load `.env` (export variables before starting it).
 
 | Variable | Purpose |
 |---|---|
-| `VITE_API_URL` | Optional local override, e.g. `http://localhost:8000`; required production backend origin. Empty uses the same-origin Vite proxy. |
+| `VITE_API_URL` | Optional live-backend override, e.g. `http://localhost:8000`. Empty uses the bundled static snapshot. |
 | `FRONTEND_ORIGIN` | Comma-separated allowed frontend origins. Default `http://localhost:5173`. Production: `https://melaka-maju.vercel.app`. |
 | `DATA_CACHE_DIR` | Absolute cache directory; defaults to `backend/data/raw`. Use persistent storage in production. |
 | `DATA_REFRESH_TOKEN` | Optional bearer token for refresh. Set on public deployments to restrict this expensive operation. |
@@ -113,9 +116,9 @@ The report generator writes four requested outputs: Melaka latest, Melaka 2024, 
 
 ## Deployment
 
-Frontend: import this repository into Vercel. Build `npm run build`, output `dist`, set `VITE_API_URL` to the deployed backend origin (without `/api`). `vercel.json` enables SPA routes. Rebuild after changing the frontend environment.
+Import this repository into Vercel. Build with `npm run build` and use `dist` as the output directory; these values are already set in `vercel.json`. Do not set `VITE_API_URL` for the static deployment. The committed files under `public/static-api` are copied into the build, and `vercel.json` enables client-side routes.
 
-Backend: deploy `backend/Dockerfile` on Render or Railway, with the service root set to `backend`. Set `FRONTEND_ORIGIN=https://melaka-maju.vercel.app`, `DATA_CACHE_DIR=/data/raw`, and a `DATA_REFRESH_TOKEN`. Attach a persistent disk at `/data`; expose the platform's `PORT` (Docker command handles it). Health check: `/api/health`. Populate data with the refresh command or authorized endpoint. The health endpoint checks process/connectivity; analytical endpoints require the datasets to be available. Use one worker for consistent cache invalidation. The Vite development proxy is not a production backend.
+To publish newer source data, refresh the backend cache locally, run `npm run data:export`, commit the changed static snapshot, and redeploy. A separate backend is not required. The bundled snapshot is read-only, so the refresh endpoint is intentionally unavailable in production.
 
 No deployment is performed by the local build. Phase 1 contains no authentication/accounts, LLM, chatbot, MCP, RAG, embeddings, forecasts or political scoring.
 
